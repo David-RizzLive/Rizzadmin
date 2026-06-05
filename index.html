@@ -119,7 +119,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sb-ver{font-size:8.5px;color:rgba(91,47,190,.3);text-align:center;margin-top:9px;letter-spacing:1px;font-family:'Cinzel',serif}
 
 /* MOBILE OVERLAY */
-.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;backdrop-filter:blur(3px)}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;backdrop-filter:blur(4px)}
 .sb-overlay.on{display:block}
 
 /* MAIN */
@@ -257,15 +257,15 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   /* Mobile topbar show */
   .topbar{display:flex}
 
-  /* Sidebar becomes drawer */
+  /* Sidebar becomes full drawer — above overlay */
   .sb{
-    position:fixed;top:0;left:0;height:100vh;
-    transform:translateX(-100%);transition:transform .3s ease;
-    z-index:200;
+    position:fixed;top:0;left:0;height:100vh;width:240px;
+    transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:200;overflow-y:auto;
   }
-  .sb.open{transform:translateX(0)}
+  .sb.open{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,.5)}
 
-  /* Main takes full width */
+  /* Main takes full width, no flex row */
   #app.on{flex-direction:column}
   .main{width:100%;min-width:0}
   .pg{padding:14px 12px}
@@ -536,10 +536,12 @@ function hideErr(id) { document.getElementById(id).style.display = 'none'; }
 function openSidebar() {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sbOverlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
 }
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sbOverlay').classList.remove('on');
+  document.body.style.overflow = '';
 }
 
 async function api(params) {
