@@ -242,6 +242,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
 .dh-live span{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:2px;color:var(--pu2);text-transform:uppercase}
 
+/* DATA DATE BADGE */
+.dh-date{display:flex;align-items:center;gap:6px;background:rgba(200,151,58,.08);
+  border:1px solid rgba(200,151,58,.25);border-radius:100px;padding:5px 13px;margin-left:8px}
+.dh-date-ic{font-size:11px}
+.dh-date-wrap{display:flex;flex-direction:column;align-items:flex-end}
+.dh-date-lbl{font-family:'Cinzel',serif;font-size:7.5px;font-weight:700;letter-spacing:1.5px;color:rgba(200,151,58,.65);text-transform:uppercase}
+.dh-date-val{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--gold3);margin-top:1px}
+
 /* MOBILE RESPONSIVE */
 @media(max-width:768px){
   :root{--sb:240px}
@@ -274,6 +282,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .dh{flex-wrap:wrap;gap:10px;padding:12px 14px}
   .dh-name{font-size:13px}
   .dh-live{padding:4px 10px}
+  .dh-date{padding:4px 10px;margin-left:0}
 
   /* Search */
   .sr{flex-direction:column}
@@ -371,6 +380,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   </div>
   <div class="sb-sec">Dashboard</div>
   <button class="nav on" id="nav-dash" onclick="goTo('dash')"><span class="nav-ic">🏠</span><span>My Dashboard</span></button>
+  <button class="nav" id="nav-hosts" onclick="goTo('hosts')"><span class="nav-ic">👥</span><span>Total Hosts</span></button>
   <button class="nav" id="nav-stream" onclick="goTo('stream')"><span class="nav-ic">🎙️</span><span>Streamer Search</span></button>
   <button class="nav" id="nav-agency" onclick="goTo('agency')"><span class="nav-ic">🏢</span><span>Agency Search</span></button>
   <div class="sb-sec">Account</div>
@@ -395,6 +405,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <div class="dh">
         <div class="dh-av" id="dhAv">?</div>
         <div><div class="dh-name" id="dhName">Welcome!</div><div class="dh-sub" id="dhSub">Loading...</div></div>
+        <div class="dh-date" id="dhDateBadge" style="display:none">
+          <span class="dh-date-ic">📅</span>
+          <div class="dh-date-wrap">
+            <span class="dh-date-lbl">Data Till</span>
+            <span class="dh-date-val" id="dhDateVal">—</span>
+          </div>
+        </div>
         <div class="dh-live"><div class="dh-dot"></div><span>Live</span></div>
       </div>
       <div class="top-stat ts-gold" style="margin-bottom:18px;max-width:260px">
@@ -412,6 +429,29 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
         <div id="dt-mo" class="tb on"><div id="dt-mo-c"><div class="loading-box"><div class="loading-ring"></div><p>Loading...</p></div></div></div>
         <div id="dt-we" class="tb"><div id="dt-we-c"></div></div>
         <div id="dt-da" class="tb"><div id="dt-da-c"></div></div>
+      </div>
+    </div>
+
+    <!-- TOTAL HOSTS -->
+    <div id="pg-hosts" style="display:none">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-hd-ic">👥</span>
+          <span class="card-hd-t">Total Hosts</span>
+          <span class="card-hd-s" id="th-count">Loading...</span>
+        </div>
+        <!-- Search bar -->
+        <div class="card-bd" style="padding-bottom:12px">
+          <div class="sr">
+            <div class="sf">
+              <label class="lbl">Search Host</label>
+              <input class="si" id="thSearch" type="text" placeholder="Nick name, Premium ID, Agency..." oninput="filterTotalHosts()"/>
+            </div>
+          </div>
+        </div>
+        <div id="thResults">
+          <div class="loading-box"><div class="loading-ring"></div><p>Loading hosts...</p></div>
+        </div>
       </div>
     </div>
 
@@ -556,6 +596,8 @@ function showApp() {
 
 function doLogout() {
   CU = null;
+  window._hostsLoaded = false;
+  window._allHosts = [];
   document.getElementById('app').classList.remove('on');
   document.getElementById('loginPage').classList.remove('hidden');
   document.getElementById('lid').value = '';
@@ -600,12 +642,13 @@ async function doPwChange() {
 }
 
 function goTo(page) {
-  ['dash', 'stream', 'agency'].forEach(p => {
+  ['dash', 'hosts', 'stream', 'agency'].forEach(p => {
     const el = document.getElementById('pg-' + p);
     if (el) el.style.display = p === page ? '' : 'none';
     const nav = document.getElementById('nav-' + p);
     if (nav) nav.classList.toggle('on', p === page);
   });
+  if (page === 'hosts' && !window._hostsLoaded) loadTotalHosts();
   closeSidebar();
 }
 
@@ -639,6 +682,15 @@ function renderDashboard(data) {
   const da = data.daily   || {};
   document.getElementById('dhSub').textContent = 'Showing ' + (mo.totalHosts||0) + ' streamers across your agencies';
   document.getElementById('ds-hosts').textContent = mo.totalHosts || 0;
+
+  // Show data date badge
+  if (data.dataDate) {
+    document.getElementById('dhDateVal').textContent = data.dataDate;
+    document.getElementById('dhDateBadge').style.display = 'flex';
+  } else {
+    document.getElementById('dhDateBadge').style.display = 'none';
+  }
+
   document.getElementById('dt-mo-c').innerHTML = dashPeriodHTML(mo, 'Monthly');
   document.getElementById('dt-we-c').innerHTML = dashPeriodHTML(we, 'Weekly');
   document.getElementById('dt-da-c').innerHTML = dashPeriodHTML(da, 'Daily');
@@ -658,14 +710,18 @@ function dashPeriodHTML(period, label) {
     + '</div>';
 
   if (ags.length) {
+    const safeLabel = label.replace(/\s+/g,'_');
     h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--pu);border-radius:0 6px 6px 0">◆ Agency Breakdown</div>';
-    h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:20px"><thead><tr><th>Agency</th><th>Union ID</th><th>Streamers</th><th>Revenue</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
-    ags.forEach(agN => {
-      const agS  = st.filter(r => r.unionName === agN);
-      const agR  = agS.reduce((s,r)=>s+(r.totalRevenue||0), 0);
-      const agH  = agS.reduce((s,r)=>s+(r.validHrs||0), 0);
-      const agD  = agS.reduce((s,r)=>s+(r.validDays||0), 0);
-      const uid  = agS[0] ? agS[0].unionId : '';
+    h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:8px"><thead><tr><th>Agency</th><th>Union ID</th><th>Streamers</th><th>Revenue</th><th>Valid Duration</th><th>Valid Days</th><th></th></tr></thead><tbody>';
+    ags.forEach((agN, idx) => {
+      const agS   = st.filter(r => r.unionName === agN);
+      const agR   = agS.reduce((s,r)=>s+(r.totalRevenue||0), 0);
+      const agH   = agS.reduce((s,r)=>s+(r.validHrs||0), 0);
+      const agD   = agS.reduce((s,r)=>s+(r.validDays||0), 0);
+      const uid   = agS[0] ? agS[0].unionId : '';
+      const panId = 'ag_pan_' + safeLabel + '_' + idx;
+      // store hosts data as JSON in a hidden span
+      const hostsJson = JSON.stringify(agS).replace(/'/g,"&#39;").replace(/"/g,'&quot;');
       h += '<tr>'
         + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av" style="background:rgba(200,151,58,.08);color:var(--gold3);border-color:rgba(200,151,58,.22)">' + initials(agN) + '</div><span style="font-family:Cinzel,serif;font-size:11.5px;font-weight:600">' + agN + '</span></div></td>'
         + '<td><span class="pill g">' + uid + '</span></td>'
@@ -673,26 +729,104 @@ function dashPeriodHTML(period, label) {
         + '<td><span class="pill r">' + fmt(agR) + ' 💎</span></td>'
         + '<td><span class="pill t">' + fmt(agH) + '</span></td>'
         + '<td><span class="pill gr">' + fmt(agD) + 'd</span></td>'
-        + '</tr>';
+        + '<td><button onclick="toggleAgHosts(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(91,47,190,.3);background:linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07));color:var(--pu2);font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap;transition:.18s" onmouseover="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.22),rgba(192,22,138,.14))\'" onmouseout="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07))\'">👥 View Hosts</button></td>'
+        + '</tr>'
+        + '<tr id="' + panId + '" style="display:none"><td colspan="7" style="padding:0;background:rgba(91,47,190,.025)">'
+        + '<div style="padding:14px 16px 18px">'
+        + '<div style="font-family:Cinzel,serif;font-size:9.5px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:5px 10px;background:linear-gradient(90deg,rgba(91,47,190,.07),transparent);border-left:3px solid var(--pk2);border-radius:0 5px 5px 0">🎙️ ' + agN + ' — ' + agS.length + ' Hosts</div>'
+        + '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Revenue</th><th>Hot Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>'
+        + agS.map(r =>
+            '<tr>'
+            + '<td><span class="pill g">' + r.premiumNumber + '</span></td>'
+            + '<td><div style="display:flex;align-items:center;gap:8px"><div class="av">' + initials(r.nickName) + '</div><span style="font-weight:600;font-size:12px">' + r.nickName + '</span></div></td>'
+            + '<td><span class="pill r">' + fmt(r.totalRevenue) + ' 💎</span></td>'
+            + '<td><span class="pill p">' + fmt(r.hotGift) + '</span></td>'
+            + '<td><span class="pill t">' + fmt(r.validHrs) + 'h</span></td>'
+            + '<td><span class="pill gr">' + r.validDays + 'd</span></td>'
+            + '</tr>'
+          ).join('')
+        + '</tbody></table></div>'
+        + '</div></td></tr>';
     });
     h += '</tbody></table></div>';
   }
 
-  h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--pu);border-radius:0 6px 6px 0">◆ Streamer Roster — ' + st.length + ' Hosts</div>';
-  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Agency</th><th>Revenue</th><th>Hot Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
-  st.forEach(r => {
+  return h;
+}
+
+// ── TOTAL HOSTS ──────────────────────────────────────────────
+window._hostsLoaded = false;
+window._allHosts = [];
+
+async function loadTotalHosts() {
+  const res = document.getElementById('thResults');
+  const cnt = document.getElementById('th-count');
+  res.innerHTML = '<div class="loading-box"><div class="loading-ring"></div><p>Loading hosts...</p></div>';
+  try {
+    const data = await api({ action: 'getTotalHosts', adminName: CU.name || CU.id });
+    if (!data.success) throw new Error(data.error || 'No data');
+    window._allHosts = data.hosts;
+    window._hostsLoaded = true;
+    cnt.textContent = data.hosts.length + ' hosts';
+    renderTotalHosts(data.hosts);
+  } catch(e) {
+    res.innerHTML = '<div class="nodata" style="margin:16px"><big>👥</big><p>' + e.message + '</p></div>';
+    cnt.textContent = 'Error loading';
+  }
+}
+
+function filterTotalHosts() {
+  const q = document.getElementById('thSearch').value.trim().toLowerCase();
+  if (!q) { renderTotalHosts(window._allHosts); return; }
+  const filtered = window._allHosts.filter(h =>
+    (h.nickName      || '').toLowerCase().includes(q) ||
+    (h.liveCreatorId || '').toLowerCase().includes(q) ||
+    (h.agencyName    || '').toLowerCase().includes(q) ||
+    (h.agencyNick    || '').toLowerCase().includes(q) ||
+    (h.idx           || '').toLowerCase().includes(q)
+  );
+  renderTotalHosts(filtered);
+}
+
+function renderTotalHosts(hosts) {
+  const res = document.getElementById('thResults');
+  if (!hosts || !hosts.length) {
+    res.innerHTML = '<div class="nodata" style="margin:16px"><big>👥</big><p>No hosts found</p></div>';
+    return;
+  }
+  let h = '<div style="overflow-x:auto"><table class="tbl"><thead><tr>'
+    + '<th>#</th>'
+    + '<th>Creator ID</th>'
+    + '<th>Nick Name</th>'
+    + '<th>Agency</th>'
+    + '<th>Agency Nick</th>'
+    + '<th>Networks ID</th>'
+    + '<th>Star</th>'
+    + '</tr></thead><tbody>';
+  hosts.forEach((r, i) => {
     h += '<tr>'
-      + '<td><span class="pill g">' + r.premiumNumber + '</span></td>'
-      + '<td><div style="display:flex;align-items:center;gap:8px"><div class="av">' + initials(r.nickName) + '</div><span style="font-weight:600;font-size:12px">' + r.nickName + '</span></div></td>'
-      + '<td style="font-size:11px;color:var(--dim)">' + r.unionName + '</td>'
-      + '<td><span class="pill r">' + fmt(r.totalRevenue) + ' 💎</span></td>'
-      + '<td><span class="pill p">' + fmt(r.hotGift) + '</span></td>'
-      + '<td><span class="pill t">' + fmt(r.validHrs) + 'h</span></td>'
-      + '<td><span class="pill gr">' + r.validDays + 'd</span></td>'
+      + '<td style="color:var(--dim);font-size:11px">' + (i+1) + '</td>'
+      + '<td><span class="pill g">' + (r.liveCreatorId||'—') + '</span></td>'
+      + '<td><div style="display:flex;align-items:center;gap:8px"><div class="av">' + initials(r.nickName) + '</div><span style="font-weight:600;font-size:12px">' + (r.nickName||'—') + '</span></div></td>'
+      + '<td style="font-size:11.5px;font-weight:500">' + (r.agencyName||'—') + '</td>'
+      + '<td><span class="pill p">' + (r.agencyNick||'—') + '</span></td>'
+      + '<td><span class="pill t">' + (r.networksId||'—') + '</span></td>'
+      + '<td style="font-size:11px;color:var(--dim)">' + (r.starRating||'—') + '</td>'
       + '</tr>';
   });
   h += '</tbody></table></div>';
-  return h;
+  res.innerHTML = h;
+}
+
+function toggleAgHosts(panId, btn) {
+  const pan = document.getElementById(panId);
+  const open = pan.style.display !== 'none' && pan.style.display !== '';
+  pan.style.display = open ? 'none' : 'table-row';
+  btn.textContent = open ? '👥 View Hosts' : '🔼 Hide Hosts';
+  btn.style.background = open
+    ? 'linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07))'
+    : 'linear-gradient(135deg,rgba(91,47,190,.25),rgba(192,22,138,.18))';
+  btn.style.color = open ? 'var(--pu2)' : '#fff';
 }
 
 async function searchStreamer() {
