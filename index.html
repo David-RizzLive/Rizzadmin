@@ -119,7 +119,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sb-ver{font-size:8.5px;color:rgba(91,47,190,.3);text-align:center;margin-top:9px;letter-spacing:1px;font-family:'Cinzel',serif}
 
 /* MOBILE OVERLAY */
-.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;backdrop-filter:blur(4px)}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150}
 .sb-overlay.on{display:block}
 
 /* MAIN */
@@ -230,23 +230,25 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 
 /* DASHBOARD HEADER */
 .dh{display:flex;align-items:center;gap:13px;padding:15px 20px;margin-bottom:18px;
-  background:var(--card);border:1px solid var(--border);border-radius:15px;box-shadow:0 2px 12px rgba(91,47,190,.045)}
+  background:var(--card);border:1px solid var(--border);border-radius:15px;box-shadow:0 2px 12px rgba(91,47,190,.045);
+  flex-wrap:wrap}
 .dh-av{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,rgba(91,47,190,.2),rgba(192,22,138,.2));
   border:2px solid var(--gold);color:var(--gold);font-size:13px;font-weight:700;font-family:'Cinzel',serif;
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .dh-name{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--dark)}
 .dh-sub{font-size:11px;color:var(--dim);margin-top:2px}
-.dh-live{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(91,47,190,.06);
+.dh-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dh-live{display:flex;align-items:center;gap:6px;background:rgba(91,47,190,.06);
   border:1px solid rgba(91,47,190,.14);border-radius:100px;padding:5px 13px}
 .dh-dot{width:6px;height:6px;border-radius:50%;background:var(--pu2);animation:pulse 1.3s ease-in-out infinite}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
 .dh-live span{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:2px;color:var(--pu2);text-transform:uppercase}
 
 /* DATA DATE BADGE */
-.dh-date{display:flex;align-items:center;gap:6px;background:rgba(200,151,58,.08);
-  border:1px solid rgba(200,151,58,.25);border-radius:100px;padding:5px 13px;margin-left:8px}
+.dh-date{display:none;align-items:center;gap:6px;background:rgba(200,151,58,.08);
+  border:1px solid rgba(200,151,58,.25);border-radius:100px;padding:5px 13px}
 .dh-date-ic{font-size:11px}
-.dh-date-wrap{display:flex;flex-direction:column;align-items:flex-end}
+.dh-date-wrap{display:flex;flex-direction:column;align-items:flex-start}
 .dh-date-lbl{font-family:'Cinzel',serif;font-size:7.5px;font-weight:700;letter-spacing:1.5px;color:rgba(200,151,58,.65);text-transform:uppercase}
 .dh-date-val{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--gold3);margin-top:1px}
 
@@ -279,10 +281,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   .tbl td{padding:9px 9px;font-size:11px}
 
   /* Dashboard header compact */
-  .dh{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .dh{gap:8px;padding:12px 14px}
   .dh-name{font-size:13px}
+  .dh-right{gap:6px}
   .dh-live{padding:4px 10px}
-  .dh-date{padding:4px 10px;margin-left:0}
+  .dh-date{padding:4px 10px}
 
   /* Search */
   .sr{flex-direction:column}
@@ -405,14 +408,16 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
       <div class="dh">
         <div class="dh-av" id="dhAv">?</div>
         <div><div class="dh-name" id="dhName">Welcome!</div><div class="dh-sub" id="dhSub">Loading...</div></div>
-        <div class="dh-date" id="dhDateBadge" style="display:none">
-          <span class="dh-date-ic">📅</span>
-          <div class="dh-date-wrap">
-            <span class="dh-date-lbl">Data Till</span>
-            <span class="dh-date-val" id="dhDateVal">—</span>
+        <div class="dh-right">
+          <div class="dh-date" id="dhDateBadge">
+            <span class="dh-date-ic">📅</span>
+            <div class="dh-date-wrap">
+              <span class="dh-date-lbl">Data Till</span>
+              <span class="dh-date-val" id="dhDateVal">—</span>
+            </div>
           </div>
+          <div class="dh-live"><div class="dh-dot"></div><span>Live</span></div>
         </div>
-        <div class="dh-live"><div class="dh-dot"></div><span>Live</span></div>
       </div>
       <div class="top-stat ts-gold" style="margin-bottom:18px;max-width:260px">
         <div class="ts-l">Total Active Hosts</div>
@@ -536,12 +541,14 @@ function hideErr(id) { document.getElementById(id).style.display = 'none'; }
 function openSidebar() {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sbOverlay').classList.add('on');
-  document.body.style.overflow = 'hidden';
+  document.getElementById('app').style.overflow = 'hidden';
+  document.getElementById('app').style.height = '100vh';
 }
 function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sbOverlay').classList.remove('on');
-  document.body.style.overflow = '';
+  document.getElementById('app').style.overflow = '';
+  document.getElementById('app').style.height = '';
 }
 
 async function api(params) {
@@ -688,9 +695,11 @@ async function loadDataDate() {
     if (data.dataDate) {
       document.getElementById('dhDateVal').textContent = data.dataDate;
       document.getElementById('dhDateBadge').style.display = 'flex';
+    } else {
+      document.getElementById('dhDateBadge').style.display = 'none';
     }
   } catch(e) {
-    // silently ignore — date badge hidden rahega
+    document.getElementById('dhDateBadge').style.display = 'none';
   }
 }
 
@@ -701,12 +710,10 @@ function renderDashboard(data) {
   document.getElementById('dhSub').textContent = 'Showing ' + (mo.totalHosts||0) + ' streamers across your agencies';
   document.getElementById('ds-hosts').textContent = mo.totalHosts || 0;
 
-  // Show data date badge
+  // dataDate already handled by loadDataDate() separately
   if (data.dataDate) {
     document.getElementById('dhDateVal').textContent = data.dataDate;
     document.getElementById('dhDateBadge').style.display = 'flex';
-  } else {
-    document.getElementById('dhDateBadge').style.display = 'none';
   }
 
   document.getElementById('dt-mo-c').innerHTML = dashPeriodHTML(mo, 'Monthly');
