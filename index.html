@@ -87,7 +87,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sb{width:var(--sb);min-height:100vh;flex-shrink:0;position:sticky;top:0;align-self:flex-start;
   background:linear-gradient(180deg,#1C0A4A,#130730);
   border-right:1px solid rgba(91,47,190,0.22);display:flex;flex-direction:column;
-  box-shadow:4px 0 28px rgba(0,0,0,0.35)}
+  box-shadow:4px 0 28px rgba(0,0,0,0.35);z-index:100}
 .sb-logo{padding:16px 18px;border-bottom:1px solid rgba(91,47,190,0.18);display:flex;align-items:center;gap:11px}
 .sb-brand{font-family:'Cinzel Decorative',serif;font-size:12px;font-weight:700;
   background:linear-gradient(135deg,#fff,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -118,9 +118,24 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .logout:hover{border-color:rgba(192,22,138,.5);color:var(--pk2);background:rgba(192,22,138,.07)}
 .sb-ver{font-size:8.5px;color:rgba(91,47,190,.3);text-align:center;margin-top:9px;letter-spacing:1px;font-family:'Cinzel',serif}
 
+/* MOBILE OVERLAY */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;backdrop-filter:blur(3px)}
+.sb-overlay.on{display:block}
+
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0}
 .pg{flex:1;padding:22px 26px;overflow-y:auto}
+
+/* MOBILE TOPBAR */
+.topbar{display:none;align-items:center;gap:12px;padding:12px 16px;
+  background:linear-gradient(135deg,#1C0A4A,#130730);border-bottom:1px solid rgba(91,47,190,.22);
+  position:sticky;top:0;z-index:50}
+.topbar-menu{background:none;border:none;color:rgba(160,126,232,.8);font-size:22px;cursor:pointer;padding:4px 6px;line-height:1}
+.topbar-brand{font-family:'Cinzel Decorative',serif;font-size:13px;font-weight:700;
+  background:linear-gradient(135deg,#fff,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,rgba(91,47,190,.4),rgba(192,22,138,.4));
+  border:2px solid var(--gold);color:var(--gold);font-size:10px;font-weight:700;font-family:'Cinzel',serif;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:auto;cursor:pointer}
 
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(91,47,190,.05);margin-bottom:18px}
@@ -130,8 +145,15 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .card-hd-s{font-size:11px;color:var(--dim);margin-left:auto}
 .card-bd{padding:20px 22px}
 
+/* TOP STAT */
+.top-stat{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:17px 19px;position:relative;overflow:hidden}
+.top-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:15px 15px 0 0}
+.ts-gold::before{background:linear-gradient(90deg,var(--gold3),var(--gold2))}
+.ts-l{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:9px;font-family:'Cinzel',serif}
+.ts-v{font-size:22px;font-weight:700;color:var(--dark);font-family:'Cinzel',serif}
+.ts-s{font-size:10.5px;color:var(--dim);margin-top:3px}
+
 /* STAT GRID */
-.sg4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:20px}
 .sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .sg2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .sc{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:15px;border-left:3.5px solid transparent}
@@ -141,17 +163,6 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .sc-l{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif}
 .sc-v{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--dark)}
 .sc-s{font-size:10.5px;color:var(--dim);margin-top:2px}
-
-/* TOP STAT */
-.top-stat{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:17px 19px;position:relative;overflow:hidden}
-.top-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:15px 15px 0 0}
-.ts-gold::before{background:linear-gradient(90deg,var(--gold3),var(--gold2))}
-.ts-pink::before{background:linear-gradient(90deg,var(--pk),var(--pk2))}
-.ts-pur::before{background:linear-gradient(90deg,var(--pu),var(--pu2))}
-.ts-teal::before{background:linear-gradient(90deg,var(--teal),#16A34A)}
-.ts-l{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:9px;font-family:'Cinzel',serif}
-.ts-v{font-size:22px;font-weight:700;color:var(--dark);font-family:'Cinzel',serif}
-.ts-s{font-size:10.5px;color:var(--dim);margin-top:3px}
 
 /* SEARCH */
 .sr{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
@@ -171,10 +182,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   border:1px solid rgba(153,27,27,.18);border-left:3px solid #DC2626;border-radius:8px;font-size:12px;color:var(--red)}
 
 /* TABS */
-.tabs{display:flex;border-bottom:1px solid rgba(91,47,190,.09);padding:0 22px}
+.tabs{display:flex;border-bottom:1px solid rgba(91,47,190,.09);padding:0 22px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{height:0}
 .tab{padding:12px 17px;border:none;background:transparent;color:var(--dim);font-family:'Cinzel',serif;
   font-size:10.5px;font-weight:600;letter-spacing:.5px;cursor:pointer;
-  border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:.18s;text-transform:uppercase}
+  border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:.18s;text-transform:uppercase;white-space:nowrap}
 .tab:hover{color:var(--pu)}.tab.on{color:var(--pu3);border-bottom-color:var(--gold);font-weight:700}
 .tb{padding:20px 22px;display:none}.tb.on{display:block}
 
@@ -230,13 +242,60 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
 .dh-live span{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:2px;color:var(--pu2);text-transform:uppercase}
 
-@media(max-width:680px){
-  :root{--sb:58px}
-  .sb-brand,.sb-tag,.sb-sec,.nav span,.sb-uname,.sb-uname+div,.sb-ver{display:none}
-  .nav{padding:11px;justify-content:center;margin:2px 5px;width:calc(100% - 10px)}
-  .sb-user{justify-content:center;padding:11px 7px}.sb-logo{justify-content:center}
-  .sg4{grid-template-columns:1fr 1fr}.sg3{grid-template-columns:1fr}.sg2{grid-template-columns:1fr}
-  .pg{padding:14px}
+/* MOBILE RESPONSIVE */
+@media(max-width:768px){
+  :root{--sb:240px}
+
+  /* Mobile topbar show */
+  .topbar{display:flex}
+
+  /* Sidebar becomes drawer */
+  .sb{
+    position:fixed;top:0;left:0;height:100vh;
+    transform:translateX(-100%);transition:transform .3s ease;
+    z-index:200;
+  }
+  .sb.open{transform:translateX(0)}
+
+  /* Main takes full width */
+  #app.on{flex-direction:column}
+  .main{width:100%;min-width:0}
+  .pg{padding:14px 12px}
+
+  /* Grids */
+  .sg3{grid-template-columns:1fr 1fr}
+  .sg2{grid-template-columns:1fr}
+
+  /* Tables scroll */
+  .tbl th{font-size:7px;padding:6px 9px}
+  .tbl td{padding:9px 9px;font-size:11px}
+
+  /* Dashboard header compact */
+  .dh{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .dh-name{font-size:13px}
+  .dh-live{padding:4px 10px}
+
+  /* Search */
+  .sr{flex-direction:column}
+  .sbtn{width:100%;justify-content:center}
+
+  /* Profile row */
+  .pr{flex-wrap:wrap;gap:10px;padding:14px}
+  .pr-badge{font-size:7.5px}
+
+  /* Modal */
+  .modal{padding:24px 20px;margin:12px}
+
+  /* Tabs */
+  .tabs{padding:0 12px}
+  .tab{padding:10px 12px;font-size:9.5px}
+  .tb{padding:14px}
+}
+
+@media(max-width:480px){
+  .sg3{grid-template-columns:1fr}
+  .dh-av{width:36px;height:36px;font-size:11px}
+  .pr-name{font-size:14px}
 }
 </style>
 </head>
@@ -293,9 +352,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 </div>
 </div>
 
+<!-- MOBILE OVERLAY -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
 <!-- APP -->
 <div id="app">
-<aside class="sb">
+<aside class="sb" id="sidebar">
   <div class="sb-logo">
     <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--pu),var(--pk));border:2px solid rgba(200,151,58,0.5);display:flex;align-items:center;justify-content:center;font-family:'Cinzel Decorative',serif;font-size:12px;color:#fff;font-weight:700;flex-shrink:0">R</div>
     <div><div class="sb-brand">Rizz Live</div><div class="sb-tag">Tracker</div></div>
@@ -319,87 +381,79 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   </div>
 </aside>
 <div class="main">
-<div class="pg">
-
-  <!-- MY DASHBOARD -->
-  <div id="pg-dash">
-    <div class="dh">
-      <div class="dh-av" id="dhAv">?</div>
-      <div><div class="dh-name" id="dhName">Welcome!</div><div class="dh-sub" id="dhSub">Loading...</div></div>
-      <div class="dh-live"><div class="dh-dot"></div><span>Live</span></div>
-    </div>
-    <div class="sg4">
-      <div class="top-stat ts-gold"><div class="ts-l">My Streamers</div><div class="ts-v" id="ds-hosts">—</div><div class="ts-s">Monthly total</div></div>
-      <div class="top-stat ts-pink"><div class="ts-l">My Revenue</div><div class="ts-v" id="ds-rev">—</div><div class="ts-s">Monthly rubies</div></div>
-      <div class="top-stat ts-pur"><div class="ts-l">Valid Hrs</div><div class="ts-v" id="ds-hrs">—</div><div class="ts-s">Monthly total</div></div>
-      <div class="top-stat ts-teal"><div class="ts-l">Valid Days</div><div class="ts-v" id="ds-days">—</div><div class="ts-s">Monthly total</div></div>
-    </div>
-    <div class="card">
-      <div class="card-hd"><span class="card-hd-ic">📊</span><span class="card-hd-t">Performance Breakdown</span></div>
-      <div class="tabs">
-        <button class="tab on" onclick="switchTab(this,'dt-mo','dt-we','dt-da')">📅 Monthly</button>
-        <button class="tab" onclick="switchTab(this,'dt-we','dt-mo','dt-da')">📊 Weekly</button>
-        <button class="tab" onclick="switchTab(this,'dt-da','dt-mo','dt-we')">📆 Daily</button>
-      </div>
-      <div id="dt-mo" class="tb on"><div id="dt-mo-c"><div class="loading-box"><div class="loading-ring"></div><p>Loading...</p></div></div></div>
-      <div id="dt-we" class="tb"><div id="dt-we-c"></div></div>
-      <div id="dt-da" class="tb"><div id="dt-da-c"></div></div>
-    </div>
+  <!-- MOBILE TOPBAR -->
+  <div class="topbar">
+    <button class="topbar-menu" onclick="openSidebar()">☰</button>
+    <span class="topbar-brand">Rizz Live</span>
+    <div class="topbar-av" id="topbarAv" onclick="openPw()">?</div>
   </div>
 
-  <!-- STREAMER SEARCH -->
-  <div id="pg-stream" style="display:none">
-    <div class="card">
-      <div class="card-hd"><span class="card-hd-ic">🎙️</span><span class="card-hd-t">Streamer Search</span><span class="card-hd-s">Search by Premium Number (Col B)</span></div>
-      <div class="card-bd">
-        <div class="sr">
-          <div class="sf"><label class="lbl">Premium Number</label><input class="si" id="strInput" type="text" placeholder="e.g. 411 or 800175036" onkeydown="if(event.key==='Enter')searchStreamer()"/></div>
-          <button class="sbtn pk" id="strBtn" onclick="searchStreamer()">🔍 Search</button>
+  <div class="pg">
+
+    <!-- MY DASHBOARD -->
+    <div id="pg-dash">
+      <div class="dh">
+        <div class="dh-av" id="dhAv">?</div>
+        <div><div class="dh-name" id="dhName">Welcome!</div><div class="dh-sub" id="dhSub">Loading...</div></div>
+        <div class="dh-live"><div class="dh-dot"></div><span>Live</span></div>
+      </div>
+      <div class="top-stat ts-gold" style="margin-bottom:18px;max-width:260px">
+        <div class="ts-l">Total Active Hosts</div>
+        <div class="ts-v" id="ds-hosts">—</div>
+        <div class="ts-s">Monthly total</div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-ic">📊</span><span class="card-hd-t">Performance Breakdown</span></div>
+        <div class="tabs">
+          <button class="tab on" onclick="switchTab(this,'dt-mo','dt-we','dt-da')">📅 Monthly</button>
+          <button class="tab" onclick="switchTab(this,'dt-we','dt-mo','dt-da')">📊 Weekly</button>
+          <button class="tab" onclick="switchTab(this,'dt-da','dt-mo','dt-we')">📆 Daily</button>
         </div>
-        <div class="err" id="strErr"></div>
+        <div id="dt-mo" class="tb on"><div id="dt-mo-c"><div class="loading-box"><div class="loading-ring"></div><p>Loading...</p></div></div></div>
+        <div id="dt-we" class="tb"><div id="dt-we-c"></div></div>
+        <div id="dt-da" class="tb"><div id="dt-da-c"></div></div>
       </div>
-      <div id="strResults"></div>
     </div>
-  </div>
 
-  <!-- AGENCY SEARCH -->
-  <div id="pg-agency" style="display:none">
-    <div class="card">
-      <div class="card-hd"><span class="card-hd-ic">🏢</span><span class="card-hd-t">Agency Search</span><span class="card-hd-s">Search by Union ID (Col E)</span></div>
-      <div class="card-bd">
-        <div class="sr">
-          <div class="sf"><label class="lbl">Union ID</label><input class="si" id="agInput" type="text" placeholder="e.g. 100925 or 101291" onkeydown="if(event.key==='Enter')searchAgency()"/></div>
-          <button class="sbtn pu" id="agBtn" onclick="searchAgency()">🔍 Search</button>
+    <!-- STREAMER SEARCH -->
+    <div id="pg-stream" style="display:none">
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-ic">🎙️</span><span class="card-hd-t">Streamer Search</span><span class="card-hd-s">Search by Premium Number (Col B)</span></div>
+        <div class="card-bd">
+          <div class="sr">
+            <div class="sf"><label class="lbl">Premium Number</label><input class="si" id="strInput" type="text" placeholder="e.g. 411 or 800175036" onkeydown="if(event.key==='Enter')searchStreamer()"/></div>
+            <button class="sbtn pk" id="strBtn" onclick="searchStreamer()">🔍 Search</button>
+          </div>
+          <div class="err" id="strErr"></div>
         </div>
-        <div class="err" id="agErr"></div>
+        <div id="strResults"></div>
       </div>
-      <div id="agResults"></div>
     </div>
-  </div>
 
-</div>
+    <!-- AGENCY SEARCH -->
+    <div id="pg-agency" style="display:none">
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-ic">🏢</span><span class="card-hd-t">Agency Search</span><span class="card-hd-s">Search by Union ID (Col E)</span></div>
+        <div class="card-bd">
+          <div class="sr">
+            <div class="sf"><label class="lbl">Union ID</label><input class="si" id="agInput" type="text" placeholder="e.g. 100925 or 101291" onkeydown="if(event.key==='Enter')searchAgency()"/></div>
+            <button class="sbtn pu" id="agBtn" onclick="searchAgency()">🔍 Search</button>
+          </div>
+          <div class="err" id="agErr"></div>
+        </div>
+        <div id="agResults"></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  CONFIG — Apna Apps Script URL yahan daalo
-// ═══════════════════════════════════════════════════════
 const API = 'https://script.google.com/macros/s/AKfycbzMwdJwGui8mnmJjhdDSZzS40T6RdhQFZTlWDeqeYwwHvGzbCSx4i5KnLCQ8pzhXfF4/exec';
 
-// ═══════════════════════════════════════════════════════
-//  FALLBACK USERS — Google Sheet se match nahi kiya toh
-//  ye local list use hogi. Sheet pe jo users hain
-//  woh automatically load ho jaenge.
-//
-//  FORMAT: { id, password, name, role }
-//  NOTE: 'id' aur 'password' EXACT match hona chahiye
-//        (id case-insensitive hai, password case-sensitive)
-// ═══════════════════════════════════════════════════════
 const FALLBACK_USERS = [
-  // Sheet mein jo dikh raha tha usse match kiya
   {id:'Ray.com',           password:'Ray123',        name:'Ray-IN',    role:'Admin'},
-  // Baaki users
   {id:'Rizz-Ray.com',      password:'Ray@1234',      name:'Ray',       role:'Admin'},
   {id:'Rizz-Jhawkins.com', password:'Jhawkins@1234', name:'Jhawkins',  role:'Super Admin'},
   {id:'Rizz-Kitty.com',    password:'Kitty@1234',    name:'Kitty',     role:'Agency Admin'},
@@ -417,9 +471,8 @@ const FALLBACK_USERS = [
   {id:'Rajesh-IN',         password:'Rajesh@1234',    name:'Rajesh',    role:'Admin'},
 ];
 
-let CU = null; // current logged-in user
+let CU = null;
 
-// ── HELPERS ─────────────────────────────────────────────
 function initials(n) {
   const s = String(n || '').trim();
   const p = s.split(/\s+/).filter(Boolean);
@@ -439,7 +492,16 @@ function showErr(id, msg) {
 }
 function hideErr(id) { document.getElementById(id).style.display = 'none'; }
 
-// ── API CALL ─────────────────────────────────────────────
+// Mobile sidebar
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sbOverlay').classList.add('on');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('on');
+}
+
 async function api(params) {
   const url = API + '?' + new URLSearchParams({ ...params, t: Date.now() });
   const res = await fetch(url, { method: 'GET', mode: 'cors', cache: 'no-cache' });
@@ -449,41 +511,23 @@ async function api(params) {
   return data;
 }
 
-// ── LOGIN ────────────────────────────────────────────────
 async function doLogin() {
   const uid = document.getElementById('lid').value.trim();
   const pw  = document.getElementById('lpw').value.trim();
   const btn = document.getElementById('lbtn');
   hideErr('lerr');
-
-  if (!uid || !pw) {
-    showErr('lerr', 'Please enter both User ID and Password.');
-    return;
-  }
-
-  btn.classList.add('ld');
-  btn.disabled = true;
-
+  if (!uid || !pw) { showErr('lerr', 'Please enter both User ID and Password.'); return; }
+  btn.classList.add('ld'); btn.disabled = true;
   try {
-    // Step 1: Try Google Sheet API first
     let users = FALLBACK_USERS;
     try {
       const fromAPI = await api({ action: 'getUsers' });
-      if (Array.isArray(fromAPI) && fromAPI.length > 0) {
-        users = fromAPI;
-        console.log('✅ Users loaded from Google Sheet:', users.length);
-      }
-    } catch (e) {
-      console.warn('⚠️ Sheet API not available, using local users:', e.message);
-    }
-
-    // Step 2: Find matching user
-    // ID: case-insensitive | Password: exact match
+      if (Array.isArray(fromAPI) && fromAPI.length > 0) users = fromAPI;
+    } catch (e) { console.warn('Using local users'); }
     const match = users.find(u =>
       String(u.id || '').trim().toLowerCase() === uid.toLowerCase() &&
       String(u.password || '').trim() === pw
     );
-
     if (!match) {
       showErr('lerr', '❌ Wrong User ID or Password. Please check and try again.');
       document.getElementById('lpw').value = '';
@@ -494,9 +538,7 @@ async function doLogin() {
   } catch (e) {
     showErr('lerr', 'Connection error: ' + e.message);
   }
-
-  btn.classList.remove('ld');
-  btn.disabled = false;
+  btn.classList.remove('ld'); btn.disabled = false;
 }
 
 function showApp() {
@@ -506,6 +548,7 @@ function showApp() {
   document.getElementById('sbName').textContent = name;
   document.getElementById('sbRole').textContent = CU.role || 'User';
   document.getElementById('sbAv').textContent = initials(name);
+  document.getElementById('topbarAv').textContent = initials(name);
   document.getElementById('dhAv').textContent = initials(name);
   document.getElementById('dhName').textContent = 'Welcome, ' + name + '!';
   loadDashboard();
@@ -519,9 +562,9 @@ function doLogout() {
   document.getElementById('lpw').value = '';
   document.getElementById('lpw').type = 'password';
   hideErr('lerr');
+  closeSidebar();
 }
 
-// ── CHANGE PASSWORD ──────────────────────────────────────
 function openPw() {
   ['pwOld', 'pwNew', 'pwCon'].forEach(id => {
     document.getElementById(id).value = '';
@@ -530,6 +573,7 @@ function openPw() {
   hideErr('pwErr');
   document.getElementById('pwOk').style.display = 'none';
   document.getElementById('pwModal').classList.add('on');
+  closeSidebar();
 }
 function closePw() { document.getElementById('pwModal').classList.remove('on'); }
 document.getElementById('pwModal').addEventListener('click', e => {
@@ -543,26 +587,18 @@ async function doPwChange() {
   const btn = document.getElementById('pwBtn');
   hideErr('pwErr');
   document.getElementById('pwOk').style.display = 'none';
-
   if (!old || !nw || !cn) { showErr('pwErr', 'Please fill all fields.'); return; }
   if (String(CU.password || '').trim() !== old) { showErr('pwErr', 'Current password is incorrect.'); return; }
   if (nw.length < 4) { showErr('pwErr', 'New password must be at least 4 characters.'); return; }
   if (nw !== cn) { showErr('pwErr', 'New passwords do not match.'); return; }
-
   btn.classList.add('ld'); btn.disabled = true;
-
-  try {
-    await api({ action: 'changePassword', id: CU.id, newPassword: nw });
-  } catch (e) {
-    console.warn('API change failed, updating locally only.');
-  }
+  try { await api({ action: 'changePassword', id: CU.id, newPassword: nw }); } catch (e) {}
   CU.password = nw;
   document.getElementById('pwOk').style.display = 'block';
   setTimeout(() => closePw(), 2000);
   btn.classList.remove('ld'); btn.disabled = false;
 }
 
-// ── NAVIGATION ───────────────────────────────────────────
 function goTo(page) {
   ['dash', 'stream', 'agency'].forEach(p => {
     const el = document.getElementById('pg-' + p);
@@ -570,9 +606,9 @@ function goTo(page) {
     const nav = document.getElementById('nav-' + p);
     if (nav) nav.classList.toggle('on', p === page);
   });
+  closeSidebar();
 }
 
-// ── TAB SWITCHER ─────────────────────────────────────────
 function switchTab(btn, showId, ...hideIds) {
   btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   btn.classList.add('on');
@@ -582,7 +618,6 @@ function switchTab(btn, showId, ...hideIds) {
   });
 }
 
-// ── DASHBOARD ────────────────────────────────────────────
 async function loadDashboard() {
   const name = CU.name || CU.id;
   document.getElementById('dhSub').textContent = 'Loading data for ' + name + '...';
@@ -592,10 +627,9 @@ async function loadDashboard() {
     renderDashboard(data);
   } catch (e) {
     document.getElementById('dhSub').textContent = 'Paste your Excel data into the Sheet to see stats here.';
-    ['ds-hosts', 'ds-rev', 'ds-hrs', 'ds-days'].forEach(id => document.getElementById(id).textContent = '0');
+    document.getElementById('ds-hosts').textContent = '0';
     const msg = '<div class="nodata"><big>📊</big><p>No data yet. Paste your Excel data into Monthly / Weekly / Daily tabs of your Google Sheet.</p></div>';
     ['dt-mo-c', 'dt-we-c', 'dt-da-c'].forEach(id => document.getElementById(id).innerHTML = msg);
-    console.warn('Dashboard:', e.message);
   }
 }
 
@@ -603,14 +637,8 @@ function renderDashboard(data) {
   const mo = data.monthly || {};
   const we = data.weekly  || {};
   const da = data.daily   || {};
-  const mSt = mo.streamers || [];
-
+  document.getElementById('dhSub').textContent = 'Showing ' + (mo.totalHosts||0) + ' streamers across your agencies';
   document.getElementById('ds-hosts').textContent = mo.totalHosts || 0;
-  document.getElementById('ds-rev').textContent   = fmt(mo.totalRevenue || 0) + ' 💎';
-  document.getElementById('ds-hrs').textContent   = fmt(mSt.reduce((s,r)=>s+(r.validHrs||0),0));
-  document.getElementById('ds-days').textContent  = fmt(mSt.reduce((s,r)=>s+(r.validDays||0),0));
-  document.getElementById('dhSub').textContent    = 'Showing ' + (mo.totalHosts||0) + ' streamers across your agencies';
-
   document.getElementById('dt-mo-c').innerHTML = dashPeriodHTML(mo, 'Monthly');
   document.getElementById('dt-we-c').innerHTML = dashPeriodHTML(we, 'Weekly');
   document.getElementById('dt-da-c').innerHTML = dashPeriodHTML(da, 'Daily');
@@ -622,19 +650,16 @@ function dashPeriodHTML(period, label) {
 
   const st    = period.streamers;
   const tRev  = period.totalRevenue || 0;
-  const tHrs  = st.reduce((s,r)=>s+(r.validHrs||0), 0);
-  const tDays = st.reduce((s,r)=>s+(r.validDays||0), 0);
   const ags   = period.agencies || [...new Set(st.map(r=>r.unionName))];
 
-  let h = '<div class="sg3" style="margin-bottom:18px">'
-    + '<div class="sc rose"><div class="sc-ic">💎</div><div class="sc-l">Revenue</div><div class="sc-v">' + fmt(tRev) + '</div><div class="sc-s">Combined rubies</div></div>'
-    + '<div class="sc teal"><div class="sc-ic">⏱️</div><div class="sc-l">Valid Hrs</div><div class="sc-v">' + fmt(tHrs) + '</div><div class="sc-s">All streamers</div></div>'
-    + '<div class="sc gold"><div class="sc-ic">📅</div><div class="sc-l">Valid Days</div><div class="sc-v">' + fmt(tDays) + '</div><div class="sc-s">Active days</div></div>'
+  // Only Revenue stat card — no Valid Hrs / Valid Days summary
+  let h = '<div style="margin-bottom:18px">'
+    + '<div class="sc rose" style="max-width:280px"><div class="sc-ic">💎</div><div class="sc-l">Revenue</div><div class="sc-v">' + fmt(tRev) + '</div><div class="sc-s">Combined rubies</div></div>'
     + '</div>';
 
   if (ags.length) {
     h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--pu);border-radius:0 6px 6px 0">◆ Agency Breakdown</div>';
-    h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:20px"><thead><tr><th>Agency</th><th>Union ID</th><th>Streamers</th><th>Revenue</th><th>Valid Hrs</th><th>Valid Days</th></tr></thead><tbody>';
+    h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:20px"><thead><tr><th>Agency</th><th>Union ID</th><th>Streamers</th><th>Revenue</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
     ags.forEach(agN => {
       const agS  = st.filter(r => r.unionName === agN);
       const agR  = agS.reduce((s,r)=>s+(r.totalRevenue||0), 0);
@@ -654,7 +679,7 @@ function dashPeriodHTML(period, label) {
   }
 
   h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--pu);border-radius:0 6px 6px 0">◆ Streamer Roster — ' + st.length + ' Hosts</div>';
-  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Agency</th><th>Revenue</th><th>Hot Gift</th><th>Valid Hrs</th><th>Valid Days</th></tr></thead><tbody>';
+  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Agency</th><th>Revenue</th><th>Hot Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
   st.forEach(r => {
     h += '<tr>'
       + '<td><span class="pill g">' + r.premiumNumber + '</span></td>'
@@ -670,7 +695,6 @@ function dashPeriodHTML(period, label) {
   return h;
 }
 
-// ── STREAMER SEARCH ──────────────────────────────────────
 async function searchStreamer() {
   const q   = document.getElementById('strInput').value.trim();
   const res = document.getElementById('strResults');
@@ -682,9 +706,7 @@ async function searchStreamer() {
     const data = await api({ action: 'searchStreamer', premiumNumber: q });
     if (!data.success) throw new Error(data.error || 'Not found');
     res.innerHTML = renderStreamerResult(data.streamer);
-  } catch (e) {
-    showErr('strErr', e.message);
-  }
+  } catch (e) { showErr('strErr', e.message); }
   btn.disabled = false; btn.innerHTML = '🔍 Search';
 }
 
@@ -712,10 +734,10 @@ function streamerPeriodHTML(rows) {
   const tDays = rows.reduce((s,x)=>s+(x.validDays||0), 0);
   let h = '<div class="sg3" style="margin:16px 0">'
     + '<div class="sc rose"><div class="sc-ic">💎</div><div class="sc-l">Revenue</div><div class="sc-v">' + fmt(tRev) + '</div></div>'
-    + '<div class="sc teal"><div class="sc-ic">⏱️</div><div class="sc-l">Valid Hrs</div><div class="sc-v">' + fmt(tHrs) + '</div></div>'
+    + '<div class="sc teal"><div class="sc-ic">⏱️</div><div class="sc-l">Valid Duration</div><div class="sc-v">' + fmt(tHrs) + '</div></div>'
     + '<div class="sc gold"><div class="sc-ic">📅</div><div class="sc-l">Valid Days</div><div class="sc-v">' + fmt(tDays) + '</div></div>'
     + '</div>';
-  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>IDX</th><th>Nick Name</th><th>Agency</th><th>Revenue</th><th>Hot Gift</th><th>Luxury Gift</th><th>Valid Hrs</th><th>Valid Days</th></tr></thead><tbody>';
+  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>IDX</th><th>Nick Name</th><th>Agency</th><th>Revenue</th><th>Hot Gift</th><th>Luxury Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
   rows.forEach(x => {
     h += '<tr>'
       + '<td><span class="pill g">' + x.idx + '</span></td>'
@@ -732,7 +754,6 @@ function streamerPeriodHTML(rows) {
   return h;
 }
 
-// ── AGENCY SEARCH ────────────────────────────────────────
 async function searchAgency() {
   const q   = document.getElementById('agInput').value.trim();
   const res = document.getElementById('agResults');
@@ -744,9 +765,7 @@ async function searchAgency() {
     const data = await api({ action: 'searchAgency', unionId: q });
     if (!data.success) throw new Error(data.error || 'Not found');
     res.innerHTML = renderAgencyResult(data.agency);
-  } catch (e) {
-    showErr('agErr', e.message);
-  }
+  } catch (e) { showErr('agErr', e.message); }
   btn.disabled = false; btn.innerHTML = '🔍 Search';
 }
 
@@ -774,7 +793,7 @@ function agencyPeriodHTML(period) {
     + '<div class="sc gold"><div class="sc-ic">💰</div><div class="sc-l">Total Revenue</div><div class="sc-v">' + fmt(period.totalRevenue) + ' 💎</div></div>'
     + '<div class="sc pur"><div class="sc-ic">🎙️</div><div class="sc-l">Streamers</div><div class="sc-v">' + period.totalHosts + '</div></div>'
     + '</div>';
-  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Star</th><th>Admin</th><th>Revenue</th><th>Hot Gift</th><th>Valid Hrs</th><th>Valid Days</th></tr></thead><tbody>';
+  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Star</th><th>Admin</th><th>Revenue</th><th>Hot Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
   st.forEach(r => {
     h += '<tr>'
       + '<td><span class="pill g">' + r.premiumNumber + '</span></td>'
@@ -791,7 +810,6 @@ function agencyPeriodHTML(period) {
   return h;
 }
 
-// ── INIT ─────────────────────────────────────────────────
 document.getElementById('loginPage').classList.remove('hidden');
 </script>
 </body>
