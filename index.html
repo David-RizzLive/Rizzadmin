@@ -664,6 +664,10 @@ function switchTab(btn, showId, ...hideIds) {
 async function loadDashboard() {
   const name = CU.name || CU.id;
   document.getElementById('dhSub').textContent = 'Loading data for ' + name + '...';
+
+  // Date alag se fetch karo — taaki getAdminData ke saath depend na kare
+  loadDataDate();
+
   try {
     const data = await api({ action: 'getAdminData', adminName: name });
     if (!data.success) throw new Error(data.error || 'No data returned');
@@ -673,6 +677,18 @@ async function loadDashboard() {
     document.getElementById('ds-hosts').textContent = '0';
     const msg = '<div class="nodata"><big>📊</big><p>No data yet. Paste your Excel data into Monthly / Weekly / Daily tabs of your Google Sheet.</p></div>';
     ['dt-mo-c', 'dt-we-c', 'dt-da-c'].forEach(id => document.getElementById(id).innerHTML = msg);
+  }
+}
+
+async function loadDataDate() {
+  try {
+    const data = await api({ action: 'getDataDate' });
+    if (data.dataDate) {
+      document.getElementById('dhDateVal').textContent = data.dataDate;
+      document.getElementById('dhDateBadge').style.display = 'flex';
+    }
+  } catch(e) {
+    // silently ignore — date badge hidden rahega
   }
 }
 
